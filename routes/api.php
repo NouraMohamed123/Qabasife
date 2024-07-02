@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\AppUser\CartController;
 use App\Http\Controllers\APPUser\PointController;
 use App\Http\Controllers\AppUser\ReviewController;
+use App\Http\Controllers\AppUser\AddressController;
 use App\Http\Controllers\AppUser\appAuthController;
 use App\Http\Controllers\AppUser\BookingController;
 use App\Http\Controllers\AppUser\GeneralController;
@@ -50,14 +51,10 @@ Route::group([
     Route::get('/privacy', [GeneralController::class, 'getAllprivacy']);
     Route::get('/term', [GeneralController::class, 'getAllTerm']);
     Route::get('/setting', [GeneralController::class, 'getAllsetting']);
-       ///////////////
-    Route::get('/cities', [GeneralController::class, 'cities']);
-    Route::get('/areas/{city_id}', [GeneralController::class, 'cityArea']);
-    //suscriptions
+    ///////////////addresses
 
-    Route::get('/suscriptions/{id}', [SubscriptionController::class, 'show']);
-    Route::get('/suscriptions', [SubscriptionController::class, 'index']);
-    Route::post('/booking-suscriptions', [SubscriptionController::class, 'booking']);
+    Route::apiResource('addresses', AddressController::class);
+
     //user
     Route::get('/user/bookings', [BookingController::class, 'userBookings']);
     Route::get('/user/suscriptions', [SubscriptionController::class, 'userSuscriptions']);

@@ -11,13 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('carts', function (Blueprint $table) {
+        Schema::create('addresses', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
+            $table->string('title'); // عنوان المنزل, عنوان المكتب, etc.
+            $table->string('street');
+            $table->string('phone');
+            $table->decimal('latitude', 10, 7); // For storing the latitude
+            $table->decimal('longitude', 10, 7); // For storing the longitude
             $table->foreign('user_id')->references('id')->on('app_users')->onDelete('cascade');
-            $table->unsignedBigInteger('service_id');
-            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
-            $table->integer('count')->default(0);
             $table->timestamps();
         });
     }
@@ -27,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('carts');
+        Schema::dropIfExists('addresses');
     }
 };

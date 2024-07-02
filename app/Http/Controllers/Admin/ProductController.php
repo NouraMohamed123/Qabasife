@@ -1,23 +1,23 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\admin;
 
-use App\Http\Controllers\Controller;
-use App\Http\Resources\ServiceResource;
-use App\Models\Service;
+use App\Models\Product;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\ProductResource;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
-class ServiceController extends Controller
+class ProductController extends Controller
 {
-    /**
+     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
-        $service=Service::paginate($request->get('per_page', 50));
-        return ServiceResource::collection($service);
+        $products=Product::paginate($request->get('per_page', 50));
+        return ProductResource::collection($products);
 
 
     }
@@ -28,11 +28,11 @@ class ServiceController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string',
+            'title' => 'required|string',
             'description' => 'required|string',
             'price' => 'required|numeric|min:0',
             'photo' => 'required|image|mimes:jpeg,webp,png,jpg,gif,pdf|max:2048',
-            'is_square_meters' => 'boolean',
+
         ]);
 
         if ($validator->fails()) {
@@ -42,22 +42,20 @@ class ServiceController extends Controller
         }
         if ($request->file('photo')) {
             $avatar = $request->file('photo');
-            $avatar->store('uploads/service_photo/', 'public');
+            $avatar->store('uploads/products/', 'public');
             $photo = $avatar->hashName();
         } else {
             $photo = null;
         }
-        $service=Service::create([
-            'name' => $request->name,
+        $product=Product::create([
+            'title' => $request->name,
             'description' => $request->description,
             'price' => $request->price,
+            'offer_price' => $request->offer_price,
             'photo' => $photo,
-            'status' => $request->has('status') ? $request->status : 1,
-            'duration' => $request->duration,
-            'is_square_meters' => $request->has('is_square_meters') ? $request->is_square_meters : true, // Add the new column value
+
         ]);
-        // return response()->json(['message' => 'service created successfully', 'data' => $service], 200);
-        return (new ServiceResource($service ))
+        return (new ProductResource($product ))
         ->response()
         ->setStatusCode(200);
     }
@@ -65,18 +63,18 @@ class ServiceController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Service $service)
+    public function show(Product $product)
     {
-        return new ServiceResource($service);
+        return new ProductResource($product);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Service $service)
+    public function update(Request $request, Product $product)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string',
+            'title' => 'required|string',
             'description' => 'required|string',
             'price' => 'required|numeric|min:0',
             'photo' => 'nullable|image|mimes:jpeg,webp,png,jpg,gif,pdf|max:2048',
@@ -91,56 +89,56 @@ class ServiceController extends Controller
         // Check if a new photo is provided
         if ($request->hasFile('photo')) {
             // Delete the existing photo if it exists
-            if ($service->photo) {
-                Storage::delete('uploads/service_photo/' . $service->photo);
+            if ($product->photo) {
+                Storage::delete('uploads/products/' . $product->photo);
             }
             // Store the new photo
             $avatar = $request->file('photo');
-            $avatar->store('uploads/service_photo/', 'public');
+            $avatar->store('uploads/products/', 'public');
             $photo = $avatar->hashName();
         } else {
-            $photo = $service->photo; // Retain the existing photo
+            $photo = $product->photo; // Retain the existing photo
         }
 
-        $service->update([
-            'name' => $request->name,
+        $product->update([
+            'title' => $request->name,
             'description' => $request->description,
             'price' => $request->price,
+            'offer_price' => $request->offer_price,
             'photo' => $photo,
-            'status' => $request->has('status') ? $request->status : 1,
-            'duration' => $request->duration,
+
         ]);
 
-        return (new ServiceResource($service))->response()->setStatusCode(200);
+        return (new ProductResource($product))->response()->setStatusCode(200);
     }
 
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Service $service)
+    public function destroy(Product $product)
     {
-        // Check if the service exists
-        if (!$service) {
-        return response()->json(['message' => 'Service not found'], 404);
+        // Check if the Product exists
+        if (!$product) {
+        return response()->json(['message' => 'Product not found'], 404);
         }
-        if ($service->photo) {
+        if ($product->photo) {
             // Assuming 'personal_photo' is the attribute storing the file name
-            $photoPath = 'uploads/service_photo/' . $service->photo;
+            $photoPath = 'uploads/products/' . $product->photo;
 
             // Delete photo from storage
             Storage::delete($photoPath);
         }
 
         // Delete the user
-        $service->delete();
+        $product->delete();
 
         return response()->json(['message' => 'العملية تمت بنجاح']);
 
     }
-    public function getServiceCount()
+    public function getProductCount()
     {
-        $count = Service::count();
+        $count = Product::count();
 
         return response()->json([
             "successful" => true,
@@ -148,5 +146,4 @@ class ServiceController extends Controller
             'data' => $count
         ]);
     }
-
 }

@@ -18,8 +18,7 @@ return new class extends Migration
             $table->decimal('total_price')->default(0.00);
             $table->string('address');
             $table->date('date');
-            $table->time('time');
-            $table->number('count-booking')->default(1);
+            $table->string('payment_method');
             $table->integer('coupon_id')->default(0);
             $table->timestamps();
         });
