@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('phone');
             $table->decimal('latitude', 10, 7); // For storing the latitude
             $table->decimal('longitude', 10, 7); // For storing the longitude
+            $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('app_users')->onDelete('cascade');
             $table->timestamps();
         });

@@ -7,15 +7,16 @@ use App\Models\Cart;
 use App\Models\User;
 use App\Models\Order;
 use App\Models\Booking;
+use App\Models\Product;
 use App\Models\Service;
 use App\Events\BookedEvent;
 use Illuminate\Http\Request;
+use App\Models\ControlBooking;
 use App\Services\TabbyPayment;
 use App\Services\paylinkPayment;
 use App\Services\TammaraPayment;
 use App\Services\WatsapIntegration;
 use App\Http\Controllers\Controller;
-use App\Models\ControlBooking;
 use Illuminate\Support\Facades\Auth;
 use App\Notifications\AppUserBooking;
 use Illuminate\Support\Facades\Validator;
@@ -47,8 +48,7 @@ class BookingController extends Controller
         $bookings = Booking::with('service')->where('user_id', $user->id)->where('paid',1)->get();
         return response()->json(['bookings' => $bookings], 200);
     }
-
-    public function getServiceDetails($serviceId)
+   public function getServiceDetails($serviceId)
     {
 
         $service = Service::with('optionTypes.options')->find($serviceId);
@@ -56,8 +56,6 @@ class BookingController extends Controller
         if (!$service) {
             return response()->json(['message' => 'Service not found'], 404);
         }
-
-        // Format the data to include option types and options
         $serviceDetails = [
             'id' => $service->id,
             'name' => $service->name,
@@ -84,11 +82,12 @@ class BookingController extends Controller
     }
 
 
+
     // public function bookService(Request $request)
     // {
     //     // Validate the incoming request data
     //     $validator = Validator::make($request->all(), [
-    //         'service_id' => 'required|exists:services,id',
+    //         'product_id' => 'required|exists:services,id',
     //         'address' => 'required|string',
     //         'date' => 'required|date_format:m-d-Y',
     //         'time' => 'required',
@@ -98,7 +97,7 @@ class BookingController extends Controller
     //     if ($validator->fails()) {
     //         return response()->json(['error' => $validator->errors()], 422);
     //     }
-    //     $service = Service::findOrFail($request->service_id);
+    //     $service = Service::findOrFail($request->product_id);
 
 
     //     // Calculate the total price: meter * service price
@@ -119,7 +118,7 @@ class BookingController extends Controller
     //     $convertedDate = Carbon::createFromFormat('m-d-Y', $request->date)->format('Y-m-d');
     //     $startTime = Carbon::createFromFormat('h:i A', $request->time)->format('H:i:s');
 
-    //     $existingBookings = Booking::where('service_id', $request->service_id)
+    //     $existingBookings = Booking::where('product_id', $request->product_id)
     //         ->where('date', $convertedDate)
     //         ->get();
 
@@ -146,7 +145,7 @@ class BookingController extends Controller
     //     // Create the booking
     //     $booking = Booking::create([
     //         'user_id' => $user->id,
-    //         'service_id' => $request->service_id,
+    //         'product_id' => $request->product_id,
     //         'address' => $request->address,
     //         'date' => $convertedDate,
     //         'time' => $startTime,
@@ -157,7 +156,7 @@ class BookingController extends Controller
 
     //     ]);
 
-    //     if (!isServiceInUserSubscription($request->service_id)) {
+    //     if (!isServiceInUserSubscription($request->product_id)) {
 
     //         if ($request->payment == 'Tabby') {
     //             $items = collect([]);
@@ -244,7 +243,7 @@ class BookingController extends Controller
     //                 'shipping_amount' => 0,
     //             ];
     //             $products[] = [
-    //                 'id' => $booking->service_id,
+    //                 'id' => $booking->product_id,
     //                 'type' => 'حجز خدمة',
     //                 'name' =>  $booking->service->name,
     //                 'sku' => 'SA-12436',
@@ -284,8 +283,6 @@ class BookingController extends Controller
             'address'        => 'required|string',
             'date'           => 'required|date_format:m-d-Y',
             'time'           => 'required',
-            'status'         => 'boolean',
-            'area_id'=>'required|exists:areas,id',
 
         ]);
         if ($validator->fails()) {
@@ -306,58 +303,19 @@ class BookingController extends Controller
         $startTime = Carbon::createFromFormat('h:i A', $request->time)->format('H:i:s');
         $carts = Cart::where('user_id', $user->id)->get();
         $items = [];
-        $items_subscriptions = [];
-        $filteredItems = [];
-        $error = false;
-        $subscription_flag = false;
+
         if ($carts->isEmpty()) {
             return response()->json([
                 'error' => 'cart is empty'
             ], 422);
         }
-        $existingDate = ControlBooking::where('date', $request->date)->first();
-        if($existingDate){
-            $existingOrders = Order::where('date', $request->date)->get();
-            foreach ($existingOrders as $existingOrder) {
-                if ($existingDate->max_number >= $existingOrder->count_booking) {
-                    return response()->json(['message' => 'Booking is closed for this date']);
-                }
-            }
-        }
+
         foreach ($carts as $cart) {
-            $service = Service::where('id', $cart->service_id)->first();
-            $existingBookings = Booking::where('service_id', $service->id)
-                ->where('date', $convertedDate)
-                ->where('paid', 1)
-                ->get();
-
-            if ($existingBookings->isNotEmpty()) {
-                foreach ($existingBookings as $existingBooking) {
-                    $existingEndTime = Carbon::createFromFormat('H:i:s', $existingBooking->time)
-                        ->addHours(4)
-                        ->format('H:i:s');
-                    $bookingStart = Carbon::createFromFormat('H:i:s', $existingBooking->time);
-                    $bookingEnd = Carbon::createFromFormat('H:i:s', $existingEndTime);
-                    $desiredStart = Carbon::createFromFormat('H:i:s', $startTime)->addMinutes(1);
-                    $desiredEnd = $desiredStart->copy()->addHours(4);
-
-                    if ($desiredStart->between($bookingStart, $bookingEnd, true)) {
-                        $error = true;
-                        break;
-                    }
-                }
-
-                if ($error) {
-                    return response()->json([
-                        'error' => 'تم حجز هذه الخدمة بالفعل. يرجى اختيار وقت آخر وبعد 4 ساعات'
-                    ], 422);
-                }
-            }
-
-            $cost = $cart->meters * $service->price;
+            $product = Product::where('id', $cart->product_id)->first();
+            $cost = $cart->meters * $product->price;
             $booking = Booking::create([
                 'user_id'     => $user->id,
-                'service_id'  => $service->id,
+                'product_id'  => $product->id,
                 'address'     => $request->address,
                 'date'        => $convertedDate,
                 'time'        => $startTime,
@@ -367,49 +325,20 @@ class BookingController extends Controller
                 'status'      => $request->has('status') ? $request->status : false,
             ]);
 
-            if ($error) {
-                return response()->json([
-                    'error' => 'تم حجز هذه الخدمة بالفعل. يرجى اختيار وقت آخر وبعد 4 ساعات'
-                ], 422);
-            }
 
-            if (isServiceInUserSubscription($service->id)) {
 
-                $user = Auth::guard('app_users')->user();
-
-                $subscriptions = $user->subscription()->where('expire_date', '>', now())->get();
-                foreach ($subscriptions as $subscription) {
-                    $pivotData = $subscription->pivot;
-                    if ($pivotData->visit_count < $subscription->visits) {
-
-                        if($subscription_flag == false){
-                            $pivotData->visit_count++;
-                        }
-                        $pivotData->save();
-                    }
-                }
-                $items_subscriptions[] = [
-                    'id'    => $service->id,
-                    'booked_id' => $booking->id,
-                    'total' => $cost,
-                ];
-                $subscription_flag= true;
-            }
 
             $items[] = [
-                'id'    => $service->id,
+                'id'    => $product->id,
                 'booked_id' => $booking->id,
                 'total' => $cost,
             ];
-            $filteredItems = array_filter($items, function ($item) use ($items_subscriptions) {
-                return !in_array($item['booked_id'], array_column($items_subscriptions, 'booked_id'));
-            });
+
 
 
         }
-        //  dd($items,$items_subscriptions,$filteredItems);
-         if (!empty($items_subscriptions)) {
-            $totalCost = collect($items_subscriptions)->sum('total') ?? 0.0;
+
+            $totalCost = collect($items)->sum('total') ?? 0.0;
             $order = Order::create([
                 'user_id'     => $user->id,
                 'total_price' => $totalCost,
@@ -419,32 +348,17 @@ class BookingController extends Controller
                 'area_id'=>$request->area_id,
             ]);
 
-            foreach ($items_subscriptions as $item) {
-                $booking = Booking::where('id', $item['booked_id'])->first();
-                $booking->paid = 1;
-                $booking->save();
-                $booking->order_id = $order->id;
-                $booking->save();
-            }
-            if(empty($filteredItems)){
+
+
              Cart::where('user_id', $user->id)->delete();
-             $data =  [
-                'name' => $order->user->name,
-                'address' => $order->address,
-                'date' => $order->date,
-                'time' => $order->time,
-                'area' => $order->area->name,
-                'city' => $order->area->city->name,
-                'message' => ' لديك حجز جديد  ليوزر مشترك ',
-            ];
-            $watsap =   new WatsapIntegration($data);
-            $watsap->Process();
+
+
              return response()->json(['message' => 'عملية الحجز تمت بنجاح'], 201);
-            }
 
-        }
 
-      $totalCost = collect($filteredItems)->sum('total') ?? 0.0;
+
+
+
       if ($request->has('coupon_code') && !empty($request->coupon_code)) {
         $coupon_data = checkCoupon($request->coupon_code, $totalCost);
         if ($coupon_data && $coupon_data['status'] == true) {
@@ -469,12 +383,7 @@ class BookingController extends Controller
             'area_id'=>$request->area_id,
             'coupon_id' => $coupon_data['id'] ?? 0,
         ]);
-        $bookings = [];
-        foreach ($filteredItems as $item) {
-            $booking = Booking::where('id', $item['booked_id'])->first();
-            $booking->order_id = $order->id;
-            $booking->save();
-        }
+
         if ($request->payment == 'Tabby') {
             $items = collect([]);
             $items->push([
@@ -561,7 +470,7 @@ class BookingController extends Controller
         //         'shipping_amount' => 0,
         //     ];
         //     $products[] = [
-        //         'id' => $booking->service_id,
+        //         'id' => $booking->product_id,
         //         'type' => 'حجز خدمة',
         //         'name' =>  $booking->service->name,
         //         'sku' => 'SA-12436',

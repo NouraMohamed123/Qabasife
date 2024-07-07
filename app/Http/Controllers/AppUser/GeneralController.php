@@ -15,13 +15,14 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\AreaResource;
 use App\Http\Resources\CityResource;
+use App\Models\Product;
 
 class GeneralController extends Controller
 {
-    public function getAllServices()
+    public function getAllProducts()
     {
-        $services = Service::all();
-        return response()->json(['services' => $services], 200);
+        $products = Product::all();
+        return response()->json(['products' => $products], 200);
     }
     public function getAllTerm()
     {
@@ -60,15 +61,8 @@ class GeneralController extends Controller
         $question = Question::all();
         return response()->json(['Question' => $question], 200);
     }
-    public function cities()
-    {
-        $terms = City::get();
-        return CityResource::collection($terms);
-    }
 
-    public function cityArea($id){
-        $areas =  Area::where('city_id',$id)->get();
-        return AreaResource::collection($areas);
-    }
+
+
 
 }

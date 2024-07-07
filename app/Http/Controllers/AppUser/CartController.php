@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\AppUser;
 
 use App\Models\Cart;
+
+use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\Service;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
@@ -17,8 +18,8 @@ class CartController extends Controller
     public function addItemToCart(Request $request)
     {
         $validator = Validator::make(request()->all(), [
-            'service_id' => 'required|exists:services,id',
-            'meters' => 'nullable|numeric',
+            'product_id' => 'required|exists:products,id',
+            'count' => 'nullable|numeric',
         ]);
 
         if ($validator->fails()) {
@@ -32,31 +33,31 @@ class CartController extends Controller
 
 
         $cart = Cart::where('user_id', $user_id)
-            ->where('service_id', $request->service_id)
+            ->where('product_id', $request->product_id)
             ->first();
 
             if ($cart) {
 
-            $cart->meters = $request->meters != 0 ? $request->meters : $cart->meters + 1;
+            $cart->count = $request->count != 0 ? $request->count : $cart->count + 1;
             $cart->save();
         } else {
 
             $cart = Cart::create([
                 'user_id' => $user_id,
-                'service_id' => $request->service_id,
-                'meters' => $request->meters == 0 ? 1 : $request->meters,
+                'product_id' => $request->product_id,
+                'count' => $request->count == 0 ? 1 : $request->count,
             ]);
         }
         return response()->json([
             'status' => true,
-            'meters' => intval($cart->meters),
+            'count' => intval($cart->count),
             'message' => 'Item added to cart successfully',
         ], 200);
     }
     public function removeItemFromCart(Request $request)
     {
         $validator = Validator::make(request()->all(), [
-            'service_id' => 'required|exists:services,id',
+            'product_id' => 'required|exists:products,id',
         ]);
         if ($validator->fails()) {
             return response()->json(['status' => false, 'message' => $validator->errors()->first()], 422);
@@ -67,13 +68,13 @@ class CartController extends Controller
         }
         $user_id = Auth::guard('app_users')->user()->id;
 
-        $cart = Cart::where('user_id', $user_id)->where('service_id', $request->service_id)->first();
+        $cart = Cart::where('user_id', $user_id)->where('product_id', $request->product_id)->first();
 
 
             $cart->delete();
             return response()->json([
                 'status' => true,
-                'meters' => 0,
+                'count' => 0,
                 'message' => 'Item removed from cart successfully',
             ], 200);
 
@@ -93,14 +94,14 @@ class CartController extends Controller
         $carts = Cart::where('user_id', $user_id)->get();
 
         $items = $carts->map(function ($cart) {
-            $service = Service::where('id', $cart->service_id)->first();
-            $cost = $cart->meters *  $service->price;
+            $product = Product::where('id', $cart->product_id)->first();
+            $cost = $cart->count *  $product->price;
 
             return [
-                'id' => $service->id,
-                'name' => $service->name ,
-                'photo' => $service->photo,
-                'meters' => $cart->meters,
+                'id' => $product->id,
+                'name' => $product->name ,
+                'photo' => $product->photo,
+                'count' => $cart->count,
                 'total' => $cost,
             ];
         });

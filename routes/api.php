@@ -44,7 +44,7 @@ Route::group([
     ///coupon
    Route::post('check-coupon', [BookingController::class, 'checkCoupon']);
     //General
-    Route::get('/services', [GeneralController::class, 'getAllServices'])->name('services');
+    Route::get('/products', [GeneralController::class, 'getAllProducts'])->name('products');
     Route::get('/contact-us', [GeneralController::class, 'getContactUs']);
     Route::get('/about-us', [GeneralController::class, 'getAboutUs']);
     Route::get('/question', [GeneralController::class, 'getQuestion']);
