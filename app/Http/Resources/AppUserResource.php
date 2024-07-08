@@ -23,7 +23,7 @@ class AppUserResource extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'number' => $this->phone,
-            'photo' => $this->image,
+            'image' => asset('uploads/user/' . $this->image),
             'phone' => $this->phone,
             'status' => $this->status,
             'created_at' => $this->created_at,

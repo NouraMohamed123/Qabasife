@@ -21,7 +21,8 @@ class AppUsers extends Authenticatable implements JWTSubject
         'phone',
         'otp',
         'status',
-        'device_token'
+        'device_token',
+        'type_shipping_agent'
 
 
     ];

@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\TermsController;
 use App\Http\Controllers\Admin\OptionController;
 use App\Http\Controllers\Admin\ReviewController;
 use App\Http\Controllers\Admin\AboutUsController;
+use App\Http\Controllers\Admin\AppUserController;
 use App\Http\Controllers\Admin\BookingController;
 use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\CouponsController;
@@ -43,7 +44,7 @@ Route::group([
     //users
     Route::get('/me', [UserController::class, 'me']);
 Route::get('/users', [UserController::class, 'index']);
-Route::get('/all_app_user', [UserController::class, 'app_user']);
+Route::apiResource('/app_user', [AppUserController::class]);
 Route::get('/users/{user}', [UserController::class, 'show']);
 Route::post('/users', [UserController::class, 'store']);
 Route::post('/users/{user}', [UserController::class, 'update']);
