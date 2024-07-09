@@ -44,7 +44,7 @@ Route::group([
     //users
     Route::get('/me', [UserController::class, 'me']);
 Route::get('/users', [UserController::class, 'index']);
-Route::apiResource('/app_user', [AppUserController::class]);
+// Route::apiResource('/app_user', [AppUserController::class]);
 Route::get('/users/{user}', [UserController::class, 'show']);
 Route::post('/users', [UserController::class, 'store']);
 Route::post('/users/{user}', [UserController::class, 'update']);

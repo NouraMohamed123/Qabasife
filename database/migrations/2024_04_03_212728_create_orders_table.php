@@ -19,7 +19,6 @@ return new class extends Migration
             $table->string('address');
             $table->date('date');
             $table->string('payment_method');
-            $table->integer('coupon_id')->default(0);
             $table->timestamps();
         });
     }
