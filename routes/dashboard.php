@@ -27,6 +27,7 @@ use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\SubscriptionController;
 use App\Http\Controllers\Admin\ControlBookingController;
 use App\Http\Controllers\Admin\PaymentGatewayController;
+use App\Http\Controllers\admin\ProductController;
 
 Route::group([
     'prefix' => 'auth'
@@ -42,15 +43,26 @@ Route::group([
     'prefix' => 'dashboard'
 ], function ($router) {
     //users
-    Route::get('/me', [UserController::class, 'me']);
+Route::get('/me', [UserController::class, 'me']);
 Route::get('/users', [UserController::class, 'index']);
-// Route::apiResource('/app_user', [AppUserController::class]);
 Route::get('/users/{user}', [UserController::class, 'show']);
 Route::post('/users', [UserController::class, 'store']);
 Route::post('/users/{user}', [UserController::class, 'update']);
 Route::delete('/users/{user}', [UserController::class, 'destroy']);
 Route::get('getUserCount', [UserController::class, 'getUserCount']);
 Route::get('getAppUserCount', [UserController::class, 'getAppUserCount']);
+//////////app users
+Route::get('/app_user', [AppUserController::class, 'index']);
+Route::get('/app_user/{user}', [AppUserController::class, 'show']);
+Route::post('/app_user', [AppUserController::class, 'store']);
+Route::post('/app_user/{user}', [AppUserController::class, 'update']);
+Route::delete('/app_user/{user}', [AppUserController::class, 'destroy']);
+//////////products
+Route::get('/products', [ProductController::class, 'index']);
+Route::get('/products/{product}', [ProductController::class, 'show']);
+Route::post('/products', [ProductController::class, 'store']);
+Route::post('/products/{product}', [ProductController::class, 'update']);
+Route::delete('/products/{product}', [ProductController::class, 'destroy']);
 //roles
 Route::get('/roles', [RoleController::class, 'index']);
 Route::get('/roles/{role}', [RoleController::class, 'show']);
