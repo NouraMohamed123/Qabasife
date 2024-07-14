@@ -17,6 +17,7 @@ use App\Services\paylinkPayment;
 use App\Services\TammaraPayment;
 use App\Services\WatsapIntegration;
 use App\Http\Controllers\Controller;
+use App\Models\OrderItem;
 use Illuminate\Support\Facades\Auth;
 use App\Notifications\AppUserBooking;
 use Illuminate\Support\Facades\Validator;
@@ -45,10 +46,10 @@ class BookingController extends Controller
         if (!$user) {
             return response()->json(['error' => 'User not authenticated'], 401);
         }
-        $bookings = Booking::with('service')->where('user_id', $user->id)->where('paid',1)->get();
+        $bookings = Booking::with('service')->where('user_id', $user->id)->where('paid', 1)->get();
         return response()->json(['bookings' => $bookings], 200);
     }
-   public function getServiceDetails($serviceId)
+    public function getServiceDetails($serviceId)
     {
 
         $service = Service::with('optionTypes.options')->find($serviceId);
@@ -280,9 +281,11 @@ class BookingController extends Controller
     public function bookMultipleServices(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'address'        => 'required|string',
+            'address_id'        => 'required|string|exists:addresses,id',
             'date'           => 'required|date_format:m-d-Y',
             'time'           => 'required',
+            'total_price' => 'required',
+           'payment_method'=>'required',
 
         ]);
         if ($validator->fails()) {
@@ -301,6 +304,7 @@ class BookingController extends Controller
         //     /////////////////////////
         $convertedDate = Carbon::createFromFormat('m-d-Y', $request->date)->format('Y-m-d');
         $startTime = Carbon::createFromFormat('h:i A', $request->time)->format('H:i:s');
+
         $carts = Cart::where('user_id', $user->id)->get();
         $items = [];
 
@@ -309,81 +313,32 @@ class BookingController extends Controller
                 'error' => 'cart is empty'
             ], 422);
         }
-
-        foreach ($carts as $cart) {
-            $product = Product::where('id', $cart->product_id)->first();
-            $cost = $cart->meters * $product->price;
-            $booking = Booking::create([
-                'user_id'     => $user->id,
-                'product_id'  => $product->id,
-                'address'     => $request->address,
-                'date'        => $convertedDate,
-                'time'        => $startTime,
-                'name'        => $request->name ?? $user->name,
-                'phone'       => $request->phone ?? $user->phone,
-                'total_price' => $cost,
-                'status'      => $request->has('status') ? $request->status : false,
-            ]);
-
-
-
-
-            $items[] = [
-                'id'    => $product->id,
-                'booked_id' => $booking->id,
-                'total' => $cost,
-            ];
-
-
-
-        }
-
-            $totalCost = collect($items)->sum('total') ?? 0.0;
-            $order = Order::create([
-                'user_id'     => $user->id,
-                'total_price' => $totalCost,
-                'address'     => $request->address,
-                'date'        => $convertedDate,
-                'time'        => $startTime,
-                'area_id'=>$request->area_id,
-            ]);
-
-
-
-             Cart::where('user_id', $user->id)->delete();
-
-
-             return response()->json(['message' => 'عملية الحجز تمت بنجاح'], 201);
-
-
-
-
-
-      if ($request->has('coupon_code') && !empty($request->coupon_code)) {
-        $coupon_data = checkCoupon($request->coupon_code, $totalCost);
-        if ($coupon_data && $coupon_data['status'] == true) {
-            $totalCost = $coupon_data['price_after_discount'];
-        } else {
-            return response()->json(['status' => false, 'message' => $coupon_data['message']], 310);
-        }
-
-    }
-    if ($request->points == true) {
-        if ($riyals = calculateRiyalsFromPoints($user->id) > 0) {
-
-            $totalCost -= $riyals;
-        }
-    }
         $order = Order::create([
-            'user_id'     => $user->id,
-            'total_price' => $totalCost,
-            'address'     => $request->address,
+            'app_users_id'     => $user->id,
+            'total_price' => $request->total_price,
+            'addresses_id'     => $request->address_id,
             'date'        => $convertedDate,
             'time'        => $startTime,
-            'area_id'=>$request->area_id,
-            'coupon_id' => $coupon_data['id'] ?? 0,
-        ]);
+            'payment_method'=>$request->payment_method
 
+        ]);
+        foreach ($carts as $cart) {
+            $product = Product::where('id', $cart->product_id)->first();
+            $cost = $cart->count * $product->price;
+            $booking = OrderItem::create([
+
+                'order_id' => $order->id,
+                'product_id'  => $product->id,
+                'quantity' => $product->count,
+                'price' => $cost,
+
+
+            ]);
+            $items[] = [
+                'id'    => $product->id,
+                'total' => $cost,
+            ];
+        }
         if ($request->payment == 'Tabby') {
             $items = collect([]);
             $items->push([
@@ -394,7 +349,7 @@ class BookingController extends Controller
             ]);
 
             $order_data = [
-                'amount' => $totalCost,
+                'amount' => $request->total_price,
                 'currency' => 'SAR',
                 'description' => 'description',
                 'full_name' =>  $order->user->name ?? 'user_name',
@@ -422,7 +377,7 @@ class BookingController extends Controller
         } elseif ($request->payment == 'Paylink') {
 
             $data = [
-                'amount' => $totalCost,
+                'amount' => $request->total_price,
                 'callBackUrl' => route('paylink-result'),
                 'clientEmail' =>  $order->user->email ?? 'test@gmail.com',
                 'clientMobile' =>  $order->user->phone ?? '9665252123',
@@ -540,5 +495,4 @@ class BookingController extends Controller
 
         return   $this->paylink->calbackPayment($request);
     }
-
 }

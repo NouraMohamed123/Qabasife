@@ -47,27 +47,19 @@ Route::group([
     Route::get('/products', [GeneralController::class, 'getAllProducts'])->name('products');
     Route::get('/contact-us', [GeneralController::class, 'getContactUs']);
     Route::get('/about-us', [GeneralController::class, 'getAboutUs']);
-    Route::get('/question', [GeneralController::class, 'getQuestion']);
     Route::get('/privacy', [GeneralController::class, 'getAllprivacy']);
     Route::get('/term', [GeneralController::class, 'getAllTerm']);
     Route::get('/setting', [GeneralController::class, 'getAllsetting']);
     ///////////////addresses
 
     Route::apiResource('addresses', AddressController::class);
-
+    // Route::get('/addresses', [AddressController::class, 'index']);
     //user
     Route::get('/user/bookings', [BookingController::class, 'userBookings']);
     Route::get('/user/suscriptions', [SubscriptionController::class, 'userSuscriptions']);
     Route::get('/user-profile', [UserProfileController::class, 'index']);
     Route::post('/update-profile', [UserProfileController::class, 'updateProfile']);
     Route::get('/deactive-account', [UserProfileController::class, 'deactive_account']);
-
-    ///notifications
-    Route::get('/readNotifications-count', [NotificationController::class, 'count']);
-    Route::get('/unreadNotifications-count', [NotificationController::class, 'unreadNotificationsCount']);
-    Route::get('/notification-read', [NotificationController::class, 'NotificationRead']);
-    Route::get('/notification-markasread', [NotificationController::class, 'MarkASRead']);
-    Route::get('/notification-clear', [NotificationController::class, 'Clear']);
 
      //////////cart
      Route::post('addItemToCart', [CartController::class, 'addItemToCart']);
@@ -78,7 +70,6 @@ Route::group([
     Route::post('/review', [ReviewController::class, 'store']);
     Route::post('/review/{review}', [ReviewController::class, 'update']);
     Route::delete('/review/{review}', [ReviewController::class, 'destroy']);
-    Route::get('/balance', [PointController::class, 'index']);
     /////////////////
     });
     Route::get('/tabby-sucess', [BookingController::class, 'sucess'])->name('success-ur');
