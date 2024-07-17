@@ -285,7 +285,6 @@ class BookingController extends Controller
             'date'           => 'required|date_format:m-d-Y',
             'time'           => 'required',
             'total_price' => 'required',
-           'payment_method'=>'required',
 
         ]);
         if ($validator->fails()) {
@@ -319,7 +318,7 @@ class BookingController extends Controller
             'addresses_id'     => $request->address_id,
             'date'        => $convertedDate,
             'time'        => $startTime,
-            'payment_method'=>$request->payment_method
+            'payment_method'=>'cash'
 
         ]);
         foreach ($carts as $cart) {
@@ -334,114 +333,9 @@ class BookingController extends Controller
 
 
             ]);
-            $items[] = [
-                'id'    => $product->id,
-                'total' => $cost,
-            ];
         }
-        if ($request->payment == 'Tabby') {
-            $items = collect([]);
-            $items->push([
-                'title' => 'title',
-                'quantity' => 1,
-                'unit_price' => 20,
-                'category' => 'Clothes',
-            ]);
-
-            $order_data = [
-                'amount' => $request->total_price,
-                'currency' => 'SAR',
-                'description' => 'description',
-                'full_name' =>  $order->user->name ?? 'user_name',
-                'buyer_phone' =>  $order->user->phone ?? '9665252123',
-                //  'buyer_email' => 'card.success@tabby.ai',//this test
-                'buyer_email' =>   $order->user->email ?? 'user@gmail.com',
-                'address' => 'Saudi Riyadh',
-                'city' => 'Riyadh',
-                'zip' => '1234',
-                'order_id' => " $order->id",
-                'registered_since' =>  $order->created_at,
-                'loyalty_level' => 0,
-                'success-url' => route('success-ur'),
-                'cancel-url' => route('cancel-ur'),
-                'failure-url' => route('failure-ur'),
-                'items' =>  $items,
-            ];
-
-            $payment = $this->tabby->createSession($order_data);
-
-            $id = $payment->id;
-
-            $redirect_url = $payment->configuration->available_products->installments[0]->web_url;
-            return  $redirect_url;
-        } elseif ($request->payment == 'Paylink') {
-
-            $data = [
-                'amount' => $request->total_price,
-                'callBackUrl' => route('paylink-result'),
-                'clientEmail' =>  $order->user->email ?? 'test@gmail.com',
-                'clientMobile' =>  $order->user->phone ?? '9665252123',
-                'clientName' =>  $order->user->name ?? 'user_name',
-                'note' => 'This invoice is for VIP client.',
-                'orderNumber' =>  $order->id,
-                'products' => [
-                    [
-                        'description' => 'description',
-                        'imageSrc' =>  'image',
-                        'price' =>  1,
-                        'qty' => 1,
-                        'title' =>  'title',
-                    ],
-                ],
-            ];
 
 
-            return $this->paylink->paymentProcess($data);
-        }
-        //  elseif ($request->payment == 'Tammara') {
-        //     $consumer = [
-        //         'first_name' =>  $order->user->name,
-        //         'last_name' => $order->user->name,
-        //         'phone' => $order->user->phone,
-        //         'email' => $order->user->email ?? 'test@test.com',
-        //     ];
-
-        //     $billing_address = [
-        //         'first_name' => $order->user->name,
-        //         'last_name' =>  $order->user->name,
-        //         'line1' =>  $request->address ?? 'Riyadh',
-        //         'city' =>  $request->address ?? 'Riyadh',
-        //         'phone' => $order->user->phone,
-        //     ];
-
-        //     $shipping_address = $billing_address;
-        //     $order = [
-        //         'order_num' =>$order->id,
-        //         'total' =>  $totalCost,
-        //         'notes' => 'notes',
-        //         'discount_name' => 'discount coupon',
-        //         'discount_amount' => 0,
-        //         'vat_amount' => 0,
-        //         'shipping_amount' => 0,
-        //     ];
-        //     $products[] = [
-        //         'id' => $booking->product_id,
-        //         'type' => 'حجز خدمة',
-        //         'name' =>  $booking->service->name,
-        //         'sku' => 'SA-12436',
-        //         'image_url' => $booking->service->photo,
-        //         'quantity' => 1,
-        //         'unit_price' => $booking->service->price,
-        //         'discount_amount' => 0,
-        //         'tax_amount' => 0,
-        //         'total' => $booking->service->price,
-        //     ];
-
-        //     dd($this->tammara->paymentProcess($order, $products, $consumer, $billing_address, $shipping_address));
-        // }
-        else {
-            return response()->json(['message' => 'choose payment ',], 422);
-        }
 
         return response()->json(['message' => 'عملية الحجز تمت بنجاح'], 201);
     }
