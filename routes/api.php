@@ -45,6 +45,7 @@ Route::group([
    Route::post('check-coupon', [BookingController::class, 'checkCoupon']);
     //General
     Route::get('/products', [GeneralController::class, 'getAllProducts'])->name('products');
+    Route::get('/products-most-common', [GeneralController::class, 'getProductMostCommon']);
     Route::get('/contact-us', [GeneralController::class, 'getContactUs']);
     Route::get('/about-us', [GeneralController::class, 'getAboutUs']);
     Route::get('/privacy', [GeneralController::class, 'getAllprivacy']);
@@ -71,15 +72,6 @@ Route::group([
     Route::delete('/review/{review}', [ReviewController::class, 'destroy']);
     /////////////////
     });
-    Route::get('/tabby-sucess', [BookingController::class, 'sucess'])->name('success-ur');
-    Route::get('/tabby-cancel', [BookingController::class, 'cancel'])->name('cancel-ur');
-    Route::get('/tabby-failure', [BookingController::class, 'failure'])->name('failure-ur');
-    Route::get('/paylink-result', [BookingController::class, 'paylinkResult'])->name('paylink-result');
 
-    ////////////
-    Route::get('/tabby-sucess-subscription', [SubscriptionController::class, 'sucess'])->name('success-ur-subscription');
-    Route::get('/tabby-cancel-subscription', [SubscriptionController::class, 'cancel'])->name('cancel-ur-subscription');
-    Route::get('/tabby-failure-subscription', [SubscriptionController::class, 'failure'])->name('failure-ur-subscription');
-    Route::get('/paylink-result-subscription', [SubscriptionController::class, 'paylinkResult'])->name('paylink-result-subscription');
 
 require __DIR__ . '/dashboard.php';

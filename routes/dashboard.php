@@ -124,21 +124,6 @@ Route::get('/reviews/{id}', [ReviewController::class, 'show']);
 Route::delete('/reviews/{id}', [ReviewController::class, 'destroy']);
 
 
-Route::get('/city', [CityController::class, 'index']);
-Route::get('/city/{city}', [CityController::class, 'show']);
-Route::post('/city', [CityController::class, 'store']);
-Route::post('/city/{city}', [CityController::class, 'update']);
-Route::delete('/city/{city}', [CityController::class, 'destroy']);
-
-
-//area route
-
-Route::get('/area', [AreaController::class, 'index']);
-Route::get('/area/{area}', [AreaController::class, 'show']);
-Route::post('/area', [AreaController::class, 'store']);
-Route::post('/area/{area}', [AreaController::class, 'update']);
-Route::delete('/area/{area}', [AreaController::class, 'destroy']);
-Route::get('/areas/{city_id}', [AreaController::class, 'cityArea']);
 
 //point
 Route::get('/balance', [PointController::class, 'index']);

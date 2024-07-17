@@ -24,6 +24,13 @@ class GeneralController extends Controller
         $products = Product::all();
         return response()->json(['products' => $products], 200);
     }
+    public function getProductMostCommon()
+    {
+        $products = Product::withCount('orderItems')
+        ->orderBy('order_items_count', 'desc')
+        ->get();
+    return response()->json(['success' => true, 'data' => $products], 200);
+    }
     public function getAllTerm()
     {
         $term = Term::all();
