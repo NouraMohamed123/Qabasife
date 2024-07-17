@@ -56,7 +56,6 @@ Route::group([
     // Route::get('/addresses', [AddressController::class, 'index']);
     //user
     Route::get('/user/bookings', [BookingController::class, 'userBookings']);
-    Route::get('/user/suscriptions', [SubscriptionController::class, 'userSuscriptions']);
     Route::get('/user-profile', [UserProfileController::class, 'index']);
     Route::post('/update-profile', [UserProfileController::class, 'updateProfile']);
     Route::get('/deactive-account', [UserProfileController::class, 'deactive_account']);

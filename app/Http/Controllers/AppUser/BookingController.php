@@ -46,8 +46,8 @@ class BookingController extends Controller
         if (!$user) {
             return response()->json(['error' => 'User not authenticated'], 401);
         }
-        $bookings = Booking::with('service')->where('user_id', $user->id)->where('paid', 1)->get();
-        return response()->json(['bookings' => $bookings], 200);
+        $orders = Order::where('app_users_id', $user->id)->get();
+        return response()->json(['orders' => $orders], 200);
     }
     public function getServiceDetails($serviceId)
     {
