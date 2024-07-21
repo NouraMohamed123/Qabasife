@@ -282,8 +282,7 @@ class BookingController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'address_id'        => 'required|string|exists:addresses,id',
-            'date'           => 'required|date_format:m-d-Y',
-            'time'           => 'required',
+            'delevery_time_id'        => 'required|exists:delevery-times,id',
             'total_price' => 'required',
 
         ]);
@@ -301,8 +300,8 @@ class BookingController extends Controller
             return response()->json(['error' => 'The entered date is in the past'], 422);
         }
         //     /////////////////////////
-        $convertedDate = Carbon::createFromFormat('m-d-Y', $request->date)->format('Y-m-d');
-        $startTime = Carbon::createFromFormat('h:i A', $request->time)->format('H:i:s');
+        // $convertedDate = Carbon::createFromFormat('m-d-Y', $request->date)->format('Y-m-d');
+        // $startTime = Carbon::createFromFormat('h:i A', $request->time)->format('H:i:s');
 
         $carts = Cart::where('user_id', $user->id)->get();
         $items = [];
@@ -316,8 +315,7 @@ class BookingController extends Controller
             'app_users_id'     => $user->id,
             'total_price' => $request->total_price,
             'addresses_id'     => $request->address_id,
-            'date'        => $convertedDate,
-            'time'        => $startTime,
+            'delevery_time_id'        => $request->delevery_time_id,
             'payment_method'=>'cash'
 
         ]);
