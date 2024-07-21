@@ -107,8 +107,6 @@ Route::get('/notification-clear/{type}', [NotificationController::class, 'Clear'
 //reports
 Route::get('/all-order', [ReportsController::class, 'all_orders']);
 Route::get('/all-payments', [ReportsController::class, 'all_payments']);
-Route::get('/all-subscription', [ReportsController::class, 'all_subscription']);
-Route::get('/all-payments-subscription', [ReportsController::class, 'all_payments_subscription']);
 
 ///
 
