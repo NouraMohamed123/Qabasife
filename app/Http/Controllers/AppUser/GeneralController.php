@@ -12,6 +12,7 @@ use App\Models\Product;
 use App\Models\Service;
 use App\Models\Setting;
 use App\Models\Question;
+use App\Models\DeleveryTime;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\AreaResource;
@@ -83,7 +84,10 @@ class GeneralController extends Controller
         return response()->json(['Question' => $question], 200);
     }
 
-
+    public function  getDeleveryTimes(){
+        $deleveryTimes = DeleveryTime::all();
+        return response()->json($deleveryTimes);
+    }
 
 
 }

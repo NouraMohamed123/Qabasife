@@ -17,17 +17,18 @@ use App\Http\Controllers\Admin\BookingController;
 use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\CouponsController;
 use App\Http\Controllers\Admin\PrivacyController;
+use App\Http\Controllers\admin\ProductController;
 use App\Http\Controllers\Admin\ReportsController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\ManualNotification;
 use App\Http\Controllers\Admin\QuestionController;
 use App\Http\Controllers\Admin\OptionTypeController;
+use App\Http\Controllers\Admin\DeleveryTimeController;
 use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\SubscriptionController;
 use App\Http\Controllers\Admin\ControlBookingController;
 use App\Http\Controllers\Admin\PaymentGatewayController;
-use App\Http\Controllers\admin\ProductController;
 
 Route::group([
     'prefix' => 'auth'
@@ -120,8 +121,12 @@ Route::delete('/coupons/{coupon}', [CouponsController::class, 'destroy']);
 Route::get('/reviews', [ReviewController::class, 'index']);
 Route::get('/reviews/{id}', [ReviewController::class, 'show']);
 Route::delete('/reviews/{id}', [ReviewController::class, 'destroy']);
-
-
+/////////////////deleveryTimes
+Route::get('/delevery-times', [DeleveryTimeController::class, 'index']);
+Route::post('/delevery-times', [DeleveryTimeController::class, 'store']);
+Route::get('/delevery-times/{deleverytime}', [DeleveryTimeController::class, 'show']);
+Route::post('/delevery-times/{deleverytime}', [DeleveryTimeController::class, 'update']);
+Route::delete('/delevery-times/{deleverytime}', [DeleveryTimeController::class, 'destroy']);
 
 //point
 Route::get('/balance', [PointController::class, 'index']);

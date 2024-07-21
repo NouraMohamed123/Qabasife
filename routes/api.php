@@ -51,6 +51,7 @@ Route::group([
     Route::get('/privacy', [GeneralController::class, 'getAllprivacy']);
     Route::get('/term', [GeneralController::class, 'getAllTerm']);
     Route::get('/setting', [GeneralController::class, 'getAllsetting']);
+    Route::get('/delevery-times', [GeneralController::class, 'getDeleveryTimes']);
     ///////////////addresses
 
     Route::apiResource('addresses', AddressController::class);
@@ -60,7 +61,6 @@ Route::group([
     Route::get('/user-profile', [UserProfileController::class, 'index']);
     Route::post('/update-profile', [UserProfileController::class, 'updateProfile']);
     Route::get('/deactive-account', [UserProfileController::class, 'deactive_account']);
-
      //////////cart
      Route::post('addItemToCart', [CartController::class, 'addItemToCart']);
      Route::post('removeItemFromCart', [CartController::class, 'removeItemFromCart']);
@@ -70,7 +70,8 @@ Route::group([
     Route::post('/review', [ReviewController::class, 'store']);
     Route::post('/review/{review}', [ReviewController::class, 'update']);
     Route::delete('/review/{review}', [ReviewController::class, 'destroy']);
-    /////////////////
+    /////////////////deleveryTimes
+
     });
 
 
