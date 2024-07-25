@@ -282,7 +282,7 @@ class BookingController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'address_id'        => 'required|string|exists:addresses,id',
-            'delevery_time_id'        => 'required|exists:delevery-times,id',
+            'delevery_time_id'        => 'required',
             'total_price' => 'required',
 
         ]);
