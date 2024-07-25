@@ -15,22 +15,14 @@ class ReportsController extends Controller
 {
     public function all_orders()
     {
-        $booked =  Order::with('user','bookings')->get();
+        $booked =  Order::with('user')->get();
         return  $booked;
     }
-    public function all_subscription()
-    {
-        $membership =  AppUsers::with('subscription')->get();
-        return  $membership;
-    }
+
     public function all_payments()
     {
         $payments = OrderPayment::with('order')->latest()->get();
         return response()->json(['data'=> $payments], 200);
     }
-    public function all_payments_subscription()
-    {
-        $payments = SubscriptionPayment::with('membership.user','membership.subscription')->latest()->get();
-        return response()->json(['data'=> $payments], 200);
-    }
+
 }
