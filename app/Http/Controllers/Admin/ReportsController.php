@@ -19,10 +19,6 @@ class ReportsController extends Controller
         return  $booked;
     }
 
-    public function all_payments()
-    {
-        $payments = OrderPayment::with('order')->latest()->get();
-        return response()->json(['data'=> $payments], 200);
-    }
+
 
 }
