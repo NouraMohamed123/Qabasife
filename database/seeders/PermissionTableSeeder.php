@@ -14,7 +14,7 @@ class PermissionTableSeeder extends Seeder
     public function run(): void
     {
         $permissions = [
-            'user-list',
+
             'create-user',
             'update-user',
             'delete-user',
@@ -33,7 +33,8 @@ class PermissionTableSeeder extends Seeder
             'question-list',
             'create-question',
             'update-question',
-            'delete-question'
+            'delete-question',
+            'user-list',
 
         ];
 
