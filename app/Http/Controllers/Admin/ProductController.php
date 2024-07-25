@@ -48,7 +48,7 @@ class ProductController extends Controller
             $photo = null;
         }
         $product=Product::create([
-            'title' => $request->name,
+            'title' => $request->title,
             'description' => $request->description,
             'price' => $request->price,
             'offer_price' => $request->offer_price,
@@ -101,7 +101,7 @@ class ProductController extends Controller
         }
 
         $product->update([
-            'title' => $request->name,
+            'title' => $request->title,
             'description' => $request->description,
             'price' => $request->price,
             'offer_price' => $request->offer_price,
