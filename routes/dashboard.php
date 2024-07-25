@@ -17,7 +17,7 @@ use App\Http\Controllers\Admin\BookingController;
 use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\CouponsController;
 use App\Http\Controllers\Admin\PrivacyController;
-use App\Http\Controllers\admin\ProductController;
+use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ReportsController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\SettingController;
