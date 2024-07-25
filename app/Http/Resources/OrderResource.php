@@ -15,7 +15,8 @@ class OrderResource extends JsonResource
     public function toArray(Request $request): array
     {
         return array_merge(parent::toArray($request), [
-            'user_details'=> $this->user
+            'user_details'=> $this->user,
+            'products_details'=> $this->orderItems->product
         ]);
     }
 }
