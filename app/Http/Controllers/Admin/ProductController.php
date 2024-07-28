@@ -17,8 +17,8 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         $products=Product::paginate($request->get('per_page', 50));
-        return ProductResource::collection($products);
 
+        return response()->json(['data' => ProductResource::collection($products)], 200);
 
     }
 
@@ -58,6 +58,8 @@ class ProductController extends Controller
         return (new ProductResource($product ))
         ->response()
         ->setStatusCode(200);
+        return response()->json(['data' => new ProductResource($product )], 200);
+
     }
 
     /**
@@ -65,7 +67,9 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        return new ProductResource($product);
+
+        return response()->json(['data' => new ProductResource($product )], 200);
+
     }
 
     /**
@@ -109,7 +113,9 @@ class ProductController extends Controller
 
         ]);
 
-        return (new ProductResource($product))->response()->setStatusCode(200);
+
+        return response()->json(['data' => new ProductResource($product )], 200);
+
     }
 
 

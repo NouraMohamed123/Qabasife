@@ -12,7 +12,8 @@ class AboutUsController extends Controller
     {
         $aboutUs = AboutUs::first();
 
-        return response()->json($aboutUs);
+     return response()->json(['data' => $aboutUs], 200);
+
     }
 
     public function update(Request $request)
@@ -23,6 +24,7 @@ class AboutUsController extends Controller
         } else {
             $aboutUs = AboutUs::create($request->all());
         }
-        return response()->json($aboutUs);
+    return response()->json(['data' => $aboutUs], 200);
+
     }
 }

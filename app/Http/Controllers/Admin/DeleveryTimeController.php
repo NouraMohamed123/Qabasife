@@ -14,7 +14,8 @@ class DeleveryTimeController extends Controller
     public function index()
     {
         $deleveryTimes = DeleveryTime::all();
-        return response()->json($deleveryTimes);
+        return response()->json(['data' => $deleveryTimes], 200);
+
     }
 
     /**
@@ -35,7 +36,8 @@ class DeleveryTimeController extends Controller
         ]);
 
         $deleveryTime = DeleveryTime::create($validatedData);
-        return response()->json($deleveryTime, 201);
+        return response()->json(['data' => $deleveryTime], 200);
+
     }
 
     /**
@@ -64,7 +66,8 @@ class DeleveryTimeController extends Controller
         ]);
 
         $deleveryTime->update($validatedData);
-        return response()->json($deleveryTime);
+        return response()->json(['data' => $deleveryTime], 200);
+
     }
 
     /**

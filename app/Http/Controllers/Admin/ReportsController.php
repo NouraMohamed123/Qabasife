@@ -10,13 +10,15 @@ use App\Models\OrderPayment;
 use Illuminate\Http\Request;
 use App\Models\SubscriptionPayment;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\OrderResource;
 
 class ReportsController extends Controller
 {
     public function all_orders()
     {
-        $booked =  Order::with('user','orderItems')->get();
-        return  $booked;
+        $order =  Order::with('user','orderItems')->get();
+        return response()->json(['data' =>new OrderResource( $order)], 200);
+
     }
 
 

@@ -48,13 +48,13 @@ class GeneralController extends Controller
     }
     public function getAllTerm()
     {
-        $term = Term::first();
-        return response()->json(['data' => $term], 200);
+        $term = Term::all();
+        return response()->json(['term' => $term], 200);
     }
     public function getAllprivacy()
     {
-        $privacy = Privacy::first();
-        return response()->json(['data' => $privacy], 200);
+        $privacy = Privacy::all();
+        return response()->json(['privacy' => $privacy], 200);
     }
     public function getAllsetting()
     {
@@ -70,18 +70,18 @@ class GeneralController extends Controller
     public function getContactUs()
     {
         $contactUs = Contact::all();
-        return response()->json(['data' => $contactUs], 200);
+        return response()->json(['contact_us' => $contactUs], 200);
     }
 
     public function getAboutUs()
     {
-        $aboutUs = AboutUs::first();
-        return response()->json(['data' => $aboutUs], 200);
+        $aboutUs = AboutUs::all();
+        return response()->json(['about_us' => $aboutUs], 200);
     }
     public function getQuestion()
     {
         $question = Question::all();
-        return response()->json(['data' => $question], 200);
+        return response()->json(['Question' => $question], 200);
     }
 
     public function  getDeleveryTimes(){

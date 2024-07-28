@@ -10,8 +10,9 @@ class TermsController extends Controller
 {
     public function index()
     {
-        $terms = Term::all();
-        return response()->json($terms,200);
+        $terms = Term::first();
+        return response()->json(['data' => $terms], 200);
+
     }
     public function update(Request $request)
     {
@@ -21,6 +22,7 @@ class TermsController extends Controller
         } else {
             $terms = Term::create($request->all());
         }
-        return response()->json($terms, 200);
+        return response()->json(['data' => $terms], 200);
+
     }
 }
