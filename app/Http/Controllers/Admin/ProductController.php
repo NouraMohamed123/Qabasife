@@ -42,10 +42,9 @@ class ProductController extends Controller
         }
         if ($request->file('photo')) {
             $avatar = $request->file('photo');
-            $avatar->store('uploads/products/', 'public');
-            $photo = $avatar->hashName();
+            $photo = upload($avatar,public_path('uploads/products'));
         } else {
-            $photo = null;
+            $photo =null;
         }
         $product=Product::create([
             'title' => $request->title,
@@ -91,19 +90,12 @@ class ProductController extends Controller
         }
 
         // Check if a new photo is provided
-        if ($request->hasFile('photo')) {
-            // Delete the existing photo if it exists
-            if ($product->photo) {
-                Storage::delete('uploads/products/' . $product->photo);
-            }
-            // Store the new photo
+        if ($request->file('photo')) {
             $avatar = $request->file('photo');
-            $avatar->store('uploads/products/', 'public');
-            $photo = $avatar->hashName();
-        } else {
-            $photo = $product->photo; // Retain the existing photo
+            $photo = upload($avatar,public_path('uploads/products'));
+        }  else {
+            $photo = $product->photo;
         }
-
         $product->update([
             'title' => $request->title,
             'description' => $request->description,
