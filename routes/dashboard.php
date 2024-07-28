@@ -93,23 +93,9 @@ Route::post('contact', [ContactController::class, 'update']);
 Route::get('/setting', [SettingController::class, 'index']);
 Route::post('/setting', [SettingController::class, 'store']);
 
-
-//payments getway
-Route::get('/payments-getway', [PaymentGatewayController::class, 'index']);
-Route::post('/tammara-update', [PaymentGatewayController::class, 'TammaraUpdate']);
-Route::post('/tabby-update', [PaymentGatewayController::class, 'TabbyUpdate']);
-
-
-///notifications
-Route::get('/notification-read/{type}', [NotificationController::class, 'NotificationRead']);
-Route::get('/notification-markasread/{type}', [NotificationController::class, 'MarkASRead']);
-Route::get('/notification-clear/{type}', [NotificationController::class, 'Clear']);
-
 //reports
 Route::get('/all-order', [ReportsController::class, 'all_orders']);
 
-
-///
 
 Route::get('/coupons', [CouponsController::class, 'index']);
 Route::post('/coupons', [CouponsController::class, 'store']);
@@ -128,8 +114,6 @@ Route::get('/delevery-times/{deleverytime}', [DeleveryTimeController::class, 'sh
 Route::post('/delevery-times/{deleverytime}', [DeleveryTimeController::class, 'update']);
 Route::delete('/delevery-times/{deleverytime}', [DeleveryTimeController::class, 'destroy']);
 
-//point
-Route::get('/balance', [PointController::class, 'index']);
 
 
 });
