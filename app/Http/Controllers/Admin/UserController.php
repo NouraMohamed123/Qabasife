@@ -134,7 +134,7 @@ class UserController extends Controller
             'nationality' => 'nullable|string|max:255',
             'photo' => 'nullable',
             'phone' => 'nullable|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
-            'email' => 'required|unique:users,email,' . $request->id,
+            'email' => 'required|unique:users,email,'. $request->id,
             'password' => 'required|string|min:8',
             'roles_name' => 'required',
         ]);
