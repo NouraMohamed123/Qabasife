@@ -11,7 +11,7 @@ class Order extends Model
     protected $guarded =[];
     public function user()
     {
-        return $this->belongsTo(AppUsers::class);
+        return $this->belongsTo(AppUsers::class,'app_users_id');
     }
     public function orderItems()
     {

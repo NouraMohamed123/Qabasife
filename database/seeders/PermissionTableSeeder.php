@@ -14,7 +14,16 @@ class PermissionTableSeeder extends Seeder
     public function run(): void
     {
         $permissions = [
-
+            'product-list',
+            'create-product',
+            'update-product',
+            'delete-product',
+            'representative-list',
+            'create-representative',
+            'update-representative',
+            'delete-representative',
+            'order-list',
+            'user-list',
             'create-user',
             'update-user',
             'delete-user',
@@ -24,17 +33,12 @@ class PermissionTableSeeder extends Seeder
             'delete-role',
             'setting',
             'update-setting',
+            'about-us',
+            'update-about-us',
             'privacy',
             'update-privacy',
             'term',
             'update-term',
-            'about-us',
-            'update-about-us',
-            'question-list',
-            'create-question',
-            'update-question',
-            'delete-question',
-            'user-list',
 
         ];
 

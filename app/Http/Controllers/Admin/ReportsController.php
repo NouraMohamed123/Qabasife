@@ -21,6 +21,15 @@ class ReportsController extends Controller
 
     }
 
+    public function getOrderCount()
+    {
+        $count = Order::count();
 
+        return response()->json([
+            "successful" => true,
+            "message" => "عملية العرض تمت بنجاح",
+            'data' => $count
+        ]);
+    }
 
 }

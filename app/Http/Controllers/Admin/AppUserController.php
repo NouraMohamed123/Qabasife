@@ -46,8 +46,9 @@ class AppUserController extends Controller
         }
         if ($request->file('image')) {
             $avatar = $request->file('image');
-            $avatar->store('uploads/users/', 'public');
-            $image = $avatar->hashName();
+            $image = upload($avatar,public_path('uploads/personal_photo'));
+        } else {
+            $image =null;
         }
         $user = AppUsers::create([
             'name' => $request->name,
@@ -98,10 +99,9 @@ class AppUserController extends Controller
         }
         if ($request->file('image')) {
             $avatar = $request->file('image');
-            $avatar->store('uploads/users/', 'public');
-            $image = $avatar->hashName();
-        }else{
-            $image = $user->image;
+             $image = upload($avatar,public_path('uploads/personal_photo'));
+        } else {
+             $image =$user->image;
         }
         $user = $user->update([
             'name' => $request->name,

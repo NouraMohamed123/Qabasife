@@ -134,7 +134,7 @@ class UserController extends Controller
             'nationality' => 'nullable|string|max:255',
             'photo' => 'nullable',
             'phone' => 'nullable|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
-            'email' => 'required|unique:users,email,'. $request->id,
+            'email' => 'required|unique:users,email,'. $user->id,
             'password' => 'required|string|min:8',
             'roles_name' => 'required',
         ]);
@@ -214,7 +214,7 @@ class UserController extends Controller
         $users =  AppUsers::all();
         return response()->json(['data' =>AppUserResource::collection($users)], 200);
     }
-    public function count_appUsers(){
+    public function getAppUserCount(){
         $count = AppUsers::count();
 
         return response()->json([

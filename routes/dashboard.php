@@ -2,6 +2,7 @@
 
 use App\Models\ControlBooking;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Admin\AreaController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\CityController;
@@ -24,6 +25,7 @@ use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\ManualNotification;
 use App\Http\Controllers\Admin\QuestionController;
 use App\Http\Controllers\Admin\OptionTypeController;
+use App\Http\Controllers\Admin\InformationController;
 use App\Http\Controllers\Admin\DeleveryTimeController;
 use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\SubscriptionController;
@@ -64,6 +66,7 @@ Route::get('/products/{product}', [ProductController::class, 'show']);
 Route::post('/products', [ProductController::class, 'store']);
 Route::post('/products/{product}', [ProductController::class, 'update']);
 Route::delete('/products/{product}', [ProductController::class, 'destroy']);
+Route::get('getProductCount', [ProductController::class, 'getProductCount']);
 //roles
 Route::get('/roles', [RoleController::class, 'index']);
 Route::get('/roles/{role}', [RoleController::class, 'show']);
@@ -95,6 +98,7 @@ Route::post('/setting', [SettingController::class, 'store']);
 
 //reports
 Route::get('/all-order', [ReportsController::class, 'all_orders']);
+Route::get('getOrderCount', [ReportsController::class, 'getOrderCount']);
 
 
 Route::get('/coupons', [CouponsController::class, 'index']);
@@ -113,6 +117,10 @@ Route::post('/delevery-times', [DeleveryTimeController::class, 'store']);
 Route::get('/delevery-times/{deleverytime}', [DeleveryTimeController::class, 'show']);
 Route::post('/delevery-times/{deleverytime}', [DeleveryTimeController::class, 'update']);
 Route::delete('/delevery-times/{deleverytime}', [DeleveryTimeController::class, 'destroy']);
+
+
+
+
 
 
 
