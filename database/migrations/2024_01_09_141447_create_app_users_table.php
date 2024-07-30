@@ -18,7 +18,8 @@ return new class extends Migration
             $table->string('password')->nullable();
             $table->string('image')->nullable();
             $table->string('phone')->unique();
-
+            $table->int('otp')->nullable();
+            $table->int('type_shipping_agent')->default(0);
             $table->timestamps();
         });
     }
