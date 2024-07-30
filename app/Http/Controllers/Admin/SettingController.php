@@ -11,11 +11,23 @@ class SettingController extends Controller
 {
     public function index()
     {
-        $settings = Setting::pluck('value', 'key')
-            ->toArray();
+        $settings = Setting::pluck('value', 'key')->toArray();
 
-        return  $settings;
+        if (isset($settings['site_logo_single'])) {
+            $settings['site_logo_single'] = asset('uploads/settings/' . $settings['site_logo_single']);
+        }
+
+        if (isset($settings['site_logo_full'])) {
+            $settings['site_logo_full'] = asset('uploads/settings/' . $settings['site_logo_full']);
+        }
+
+        if (isset($settings['site_logo_dark'])) {
+            $settings['site_logo_dark'] = asset('uploads/settings/' . $settings['site_logo_dark']);
+        }
+
+        return $settings;
     }
+
 
     /**
      * Show the form for creating a new resource.
