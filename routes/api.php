@@ -40,18 +40,9 @@ Route::group([
     //booking
     Route::post('booking', [BookingController::class, 'bookMultipleServices']);
     Route::delete('/bookings/{id}', [BookingController::class, 'cancelBooking']);
-    Route::get('service-details/{service}', [BookingController::class, 'getServiceDetails']);
     ///coupon
-   Route::post('check-coupon', [BookingController::class, 'checkCoupon']);
-    //General
-    Route::get('/products', [GeneralController::class, 'getAllProducts'])->name('products');
-    Route::get('/products-most-common', [GeneralController::class, 'getProductMostCommon']);
-    Route::get('/contact-us', [GeneralController::class, 'getContactUs']);
-    Route::get('/about-us', [GeneralController::class, 'getAboutUs']);
-    Route::get('/privacy', [GeneralController::class, 'getAllprivacy']);
-    Route::get('/term', [GeneralController::class, 'getAllTerm']);
-    Route::get('/setting', [GeneralController::class, 'getAllsetting']);
-    Route::get('/delevery-times', [GeneralController::class, 'getDeleveryTimes']);
+     Route::post('check-coupon', [BookingController::class, 'checkCoupon']);
+
     ///////////////addresses
 
     Route::apiResource('addresses', AddressController::class);
@@ -73,6 +64,15 @@ Route::group([
     /////////////////deleveryTimes
 
     });
+Route::get('service-details/{service}', [BookingController::class, 'getServiceDetails']);
 
-
+ //General
+ Route::get('/products', [GeneralController::class, 'getAllProducts'])->name('products');
+ Route::get('/products-most-common', [GeneralController::class, 'getProductMostCommon']);
+ Route::get('/contact-us', [GeneralController::class, 'getContactUs']);
+ Route::get('/about-us', [GeneralController::class, 'getAboutUs']);
+ Route::get('/privacy', [GeneralController::class, 'getAllprivacy']);
+ Route::get('/term', [GeneralController::class, 'getAllTerm']);
+ Route::get('/setting', [GeneralController::class, 'getAllsetting']);
+ Route::get('/delevery-times', [GeneralController::class, 'getDeleveryTimes']);
 require __DIR__ . '/dashboard.php';
