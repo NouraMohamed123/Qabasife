@@ -28,8 +28,8 @@ class AppUsersController extends Controller
         $is_new_user = true;
 
         //generate OTP
-        // $otp = str_pad(mt_rand(1, 9999), 4, '0', STR_PAD_LEFT);
-        $otp = 1234;
+         $otp = str_pad(mt_rand(1, 9999), 4, '0', STR_PAD_LEFT);
+        // $otp = 1234;
         try {
             if ($user) {
                 //save code in database
@@ -197,12 +197,12 @@ class AppUsersController extends Controller
     {
         try {
 
-            $token = "1c6120686b6b628a4b7e6b925b013757";
+            $token = "1c9b95ac634c51d4e12d92e6e5bb2cd5";
             $url = "https://api.taqnyat.sa/v1/messages";
 
             //Sender Name must be pre approved by the operator before being used
             //يجب ان يتم الموافقة على اسم المرسل من قبل مزود الخدمة قبل البدئ باستخدامه
-            $sender = "deep clean";
+            $sender = "Qabasife";
 
             //You may send message to 1 destination or multiple destinations by supply destinations number in one string and separate the numbers with "," or provide a array of strings
             //يمكنك ارسال الرسائل الى جهة واحدة من خلال او اكثر تزويدنا بالارقام في متغير نصي واحد تكون فيه الارقام مفصولة عن بعضها باستخدام "," او من خلال تزويدنا بمصفوفة من الارقام
