@@ -217,7 +217,7 @@ class AppUsersController extends Controller
                 'recipients' => $recipients,
                 'body' => $body,
             );
-             Log::info('SMS Response', ['number' => $number]);
+            //  Log::info('SMS Response', ['number' => $number]);
 
             $data = json_encode($data);
 
@@ -241,12 +241,12 @@ class AppUsersController extends Controller
             $response = curl_exec($curl);
 
         // Log the response
-         Log::info('SMS Response', ['response' => $response]);
+        //  Log::info('SMS Response', ['response' => $response]);
 
         if ($response === false) {
             $error = curl_error($curl);
             // Log curl error
-             Log::error('Curl error', ['error' => $error]);
+            //  Log::error('Curl error', ['error' => $error]);
             curl_close($curl);
             return false;
         }
