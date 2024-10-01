@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Facades\Log;
 class AppUsersController extends Controller
 {
     public function check_number(Request $request)
@@ -193,6 +194,7 @@ class AppUsersController extends Controller
         Auth::guard('app_users')->user()->update(['device_token'=>$request->device_token]);
         return response()->json(['token saved successfully.']);
     }
+    
     public function send_sms($number, $text)
     {
         try {
@@ -200,16 +202,12 @@ class AppUsersController extends Controller
             $token = "1c9b95ac634c51d4e12d92e6e5bb2cd5";
             $url = "https://api.taqnyat.sa/v1/messages";
 
-            //Sender Name must be pre approved by the operator before being used
-            //يجب ان يتم الموافقة على اسم المرسل من قبل مزود الخدمة قبل البدئ باستخدامه
             $sender = "Qabasife";
 
             //You may send message to 1 destination or multiple destinations by supply destinations number in one string and separate the numbers with "," or provide a array of strings
             //يمكنك ارسال الرسائل الى جهة واحدة من خلال او اكثر تزويدنا بالارقام في متغير نصي واحد تكون فيه الارقام مفصولة عن بعضها باستخدام "," او من خلال تزويدنا بمصفوفة من الارقام
             $recipients = $number;
 
-            //The message Content in UTF-8
-            //نص الرساله مشفر ب UTF-8
             $body = $text;
 
             $customRequest = "POST"; //POST or GET
@@ -219,6 +217,7 @@ class AppUsersController extends Controller
                 'recipients' => $recipients,
                 'body' => $body,
             );
+             Log::info('SMS Response', ['number' => $number]);
 
             $data = json_encode($data);
 
@@ -241,10 +240,21 @@ class AppUsersController extends Controller
 
             $response = curl_exec($curl);
 
-            return true;
+        // Log the response
+         Log::info('SMS Response', ['response' => $response]);
+
+        if ($response === false) {
+            $error = curl_error($curl);
+            // Log curl error
+             Log::error('Curl error', ['error' => $error]);
+            curl_close($curl);
+            return false;
+        }
+
+        curl_close($curl);
+        return true;
         } catch (\Exception $e) {
             return false;
         }
     }
-
 }
