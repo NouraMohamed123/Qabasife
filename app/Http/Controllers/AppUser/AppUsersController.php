@@ -40,9 +40,9 @@ class AppUsersController extends Controller
                     $is_new_user = false;
                 }
 
-                if ($user->status == 0) {
-                    return response()->json(['success' => "false", 'is_new' => false], 403);
-                }
+                // if ($user->status == 0) {
+                //     return response()->json(['success' => "false", 'is_new' => false], 403);
+                // }
             } else {
 
                 //create user
