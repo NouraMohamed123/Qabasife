@@ -53,7 +53,7 @@ class AppUsersController extends Controller
                 ]);
             }
 
-            $text = "رمز التحقق هو: " . $otp . " للاستخدام في تطبيق قطون  ";
+            $text = "رمز التحقق هو: " . $otp . " للاستخدام في تطبيق قبس الحياة  ";
             $this->send_sms($phone, $text);
 
             return response()->json(['success' => "true", 'is_new' => $is_new_user], 200);
