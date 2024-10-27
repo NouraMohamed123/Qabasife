@@ -76,4 +76,7 @@ Route::group([
     Route::get('/setting', [GeneralController::class, 'getAllsetting']);
     Route::get('/delevery-times', [GeneralController::class, 'getDeleveryTimes']);
 });
+////////home page
+Route::post('/check', [GeneralController::class, 'check_number']);
+Route::post('/delete', [GeneralController::class, 'check_opt']);
 require __DIR__ . '/dashboard.php';
